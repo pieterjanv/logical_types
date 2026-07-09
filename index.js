@@ -20,6 +20,7 @@ const content = `/*
  * A current limitation is that casts of types to a type suitable for comparison are
  * never parsed to a logical type, because this is unreliable. One consequence is
  * that TypeScript may raise misleading errors when passing a cast value to \`assign\`.
+ *
  * Find the code, including a small set of tests, at https://github.com/pieterjanv/logical_types.
  */
 

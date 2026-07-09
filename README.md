@@ -1,6 +1,6 @@
 # Logical types
 
-An exploration to see whether types can be combined logically, i.e. with complements, intersections and unions. Practicailty has been an aim, but it's too early to say whether this is useful in practice.
+An exploration to see whether types can be combined logically, i.e. with complements, intersections and unions. Practicality has been an aim, but it's too early to say whether this is useful in practice.
 
 The results can be tested at [https://pieterjanv.github.io/logical_types/](https://pieterjanv.github.io/logical_types/). Scroll to the bottom for examples of usage.
 
