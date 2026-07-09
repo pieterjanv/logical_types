@@ -8,7 +8,7 @@ example_1_2__T_implies_U({ a: true, b: true } as const);
 example_1_2__T_implies_U({ a: true, b: false } as const);
 example_1_2__T_implies_U({ a: false, b: true } as const);
 example_1_2__T_implies_U({ a: false, b: false } as const);
-m
+
 declare const example_1_2__T_negimplies_U: <T>(
 	x: In<T, Not<Or<[Not<{ a: true }>, { b: true }]>>>,
 ) => T;
