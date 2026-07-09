@@ -1,0 +1,6 @@
+{
+  "name": "logical_types",
+  "version": "1.0.0-alpha.1",
+  "type": "module",
+  "main": "src/main.ts"
+}
