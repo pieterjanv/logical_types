@@ -47,6 +47,7 @@ const stringIsUnassignable = assign<Not<Or<[string, number]>>>()("test");
 const booleanIsFine = assign<Not<Or<[string, number]>>>()(true);
 booleanIsFine;
 
+
 /*
  * Type a function that has logical types as parameters and return type.
  */
@@ -57,8 +58,10 @@ function takesNonNumberReturnsNonString<T>(
 }
 
 // @ts-expect-error "Argument of type 'number' is not assignable to parameter of type 'Not<number> & string'."
-takesNonNumberReturnsNonString(5);
-takesNonNumberReturnsNonString("hello");
+const numberIsUnassignable = takesNonNumberReturnsNonString(5);
+
+const stringIsFine = takesNonNumberReturnsNonString("hello");
+stringIsFine;
 `;
 
 const myScript =  monaco.editor.createModel(
