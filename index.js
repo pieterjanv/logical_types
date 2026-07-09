@@ -24,7 +24,7 @@ const content = `/*
 ${await (await fetch(`${appUrl}/src/types/logic.ts`)).text()}
 ${(await (await fetch(`${appUrl}/src/logic.ts`)).text())
 	.split('\n')
-	.filter((line) => !line.startsWith('import '))
+	.filter((line) => !line.startsWith('import ') && !line.startsWith('export * from '))
 	.join('\n')
 }
 
@@ -37,9 +37,9 @@ ${(await (await fetch(`${appUrl}/src/logic.ts`)).text())
  */
 
 // @ts-expect-error "Argument of type 'string' is not assignable to parameter of type 'Not<string> & Not<number>'."
-const stringIsUnassignable = comparable<Not<Or<[string, number]>>>()("test");
+const stringIsUnassignable = assign<Not<Or<[string, number]>>>()("test");
 
-const booleanIsFine = comparable<Not<Or<[string, number]>>>()(true);
+const booleanIsFine = assign<Not<Or<[string, number]>>>()(true);
 booleanIsFine;
 
 /*
@@ -48,7 +48,7 @@ booleanIsFine;
 function takesNonNumberReturnsNonString<T>(
 	x: In<T, And<[Not<number>, string]>>,
 ): Comparable<Not<string>> {
-	return comparable<Not<string>>()(x.length);
+	return assign<Not<string>>()(x.length);
 }
 
 // @ts-expect-error "Argument of type 'number' is not assignable to parameter of type 'Not<number> & string'."
