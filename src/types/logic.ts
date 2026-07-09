@@ -147,9 +147,15 @@ type In3<Source, Target> = (
 			)
 			: Source extends [infer SourceHead, ...infer SourceTail extends readonly unknown[]] ? (
 				Target extends [infer TargetHead, ...infer TargetTail extends readonly unknown[]] ? (
-					[In2<SourceHead, TargetHead>, ...In2<SourceTail, TargetTail>]
+					Target['length'] extends Source['length'] ? (
+						[In2<SourceHead, TargetHead>, ...In2<SourceTail, TargetTail>]
+					)
+					: never
 				)
 				: never
+			)
+			: Source extends [] ? (
+				Target extends [] ? Source : never
 			)
 			: never
 		)

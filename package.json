@@ -2,5 +2,8 @@
   "name": "logical_types",
   "version": "1.0.0-alpha.1",
   "type": "module",
-  "main": "src/main.ts"
+  "main": "src/main.ts",
+  "scripts": {
+    "update-source": "mkdir -p src/types && cp $DEV/node/packages/ts.ui-core/src/ts.ui/public/logic.ts src/logic.ts && cp $DEV/node/packages/ts.ui-core/src/ts.ui/public/types/logic.ts src/types/logic.ts"
+  }
 }

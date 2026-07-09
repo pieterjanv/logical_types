@@ -1,4 +1,4 @@
-import type { And, In, Not, Or } from "../src/types.ts";
+import type { And, In, Not, Or } from "../src/types/logic.ts";
 
 declare const example_1_2__T_implies_U: <T>(
 	x: In<T, Or<[Not<{ a: true }>, { b: true }]>>,

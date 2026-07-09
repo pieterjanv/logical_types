@@ -46,7 +46,7 @@
     "outDir": "./dist"
   },
   "files": [
-    "src/main.ts",
+    "src/logic.ts",
     "tests/main.ts"
   ]
 }
