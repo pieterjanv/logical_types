@@ -1,43 +1,81 @@
 # Logical types
 
-An exploration to see whether logical statements can take types as arguments.
-E.g., can I negate a type, and interpret one type implying another type?
+An exploration to see whether types can be combined logically, i.e. with complements, intersections and unions. Practicailty has been an aim, but it's too early to say whether this is useful in practice.
 
-My hunch is yes.
+The results can be tested at [https://pieterjanv.github.io/logical_types/](https://pieterjanv.github.io/logical_types/). Scroll to the bottom for examples of usage.
 
-The approach taken is to define a type system that can express logical type
+
+## Introduction
+
+My hunch is that all validities between types involving complement, intersection,
+and union are validities of propositional logic with a straightforward mapping
+of `never` to `false` and the rest to `true`. If true, then one can easily
+disprove a suspected validity between types with a truth table
+generator for propositional logic; if it's not true for all truth assignments,
+then it's not a validity between types.
+
+The aim is then to find a way to transform logical type combinations into a form
+that TypeScript can check for assignability, using only validities of both
+propositional logic and plausibly of types.
+
+The approach taken is to define a simple type system that can express logical type
 combinations including merely negation, conjunction, and disjunction, and to
-provide a type that checks that given such a type, some other type meets the
-constraints. Since assignability is almost like logical implication, it's fairly
-easy to deal with intersections and unions including negation due to some
-simplifying transformations that are like some tautologies of propositional
-logic.
+provide a way to check that given such a type, some other type meets its
+constraints. My assumption is that assignability of `source` to `target` implies
+`source → target` when we map `never` to `false` and the rest to `true`, but
+it seems the resemblance is deeper. Then it's fairly easy to make some educated
+guesses as to how to deal with intersections and unions including negation, as
+some tautologies of propositional logic around implication suggest a way to
+decompose them in a way that native TypeScript types correctly handle.
 
 The main logical results that underpin this approach follow below. Note
 that these are all tautologies of propositional logic, but not all tautologies
 of propositional logic apply to types in TypeScript. To translate a logical
 proposition below, read conjunction `∧` as intersection, disjunction `∨` as
-union, and negation `¬` as complement. Implication `→` is the assignability
+union, and negation `¬` as complement. Implication `→` maps to the assignability
 relation. Note also that straightforward examples for each tautology can be
-obtained by mapping logical true to `unknown` and logical false to `never`.
+obtained by mapping logical true to a single non-`never` type and logical false
+to `never`.
+
+It's easy to verify these are tautologies, i.e. true for all possible inputs,
+with the [truth table generator](https://web.stanford.edu/class/cs103/tools/truth-table-tool/) published at Stanford.
 
 
 ## Example usage
 
-TODO: Add examples for assigning to a `Comparable` and typechecking a parameter.
+
+### Using the casting function.
+
+```typescript
+// @ts-expect-error "Argument of type 'string' is not assignable to parameter of type 'Not<string> & Not<number>'."
+const stringIsUnassignable = assign<Not<Or<[string, number]>>>()("test");
+
+const booleanIsFine = assign<Not<Or<[string, number]>>>()(true);
+booleanIsFine;
+```
+
+
+### Type a function that has logical types as parameters and return type.
+
+```typescript
+function takesNonNumberReturnsNonString<T>(
+	x: In<T, And<[Not<number>, string]>>,
+): Comparable<Not<string>> {
+	return assign<Not<string>>()(x.length);
+}
+
+// @ts-expect-error "Argument of type 'number' is not assignable to parameter of type 'Not<number> & string'."
+const numberIsUnassignable = takesNonNumberReturnsNonString(5);
+
+const stringIsFine = takesNonNumberReturnsNonString("hello");
+stringIsFine;
+```
 
 
 ## Underpinning logical results
 
 
-### Dealing with negated targets and assignability
-
-
-#### if `¬(source ∧ target)` then `source → ¬target`
-
-If there is zero overlap between source and target, then source is assignable
-to the negation of target. Zero overlap is easy to check between non-negated
-types by checking assignability of their intersection to `never`.
+### Testing assignability via intersections
 
 
 #### `source → source ∧ target` is equivalent to `source → target`
@@ -48,17 +86,31 @@ then source is assignable to target.
 This allows us to receive an intersection, yet check for assignability.
 
 
-#### If `(source → target) ∧ (source → ¬target)` then `¬source`
-
-If source is assignable to target, then if source is also assignable to
-the negation of target, source must be never.
-
-
 #### In case of partial overlap between source and target, there is no assignability to target or its negation
+
+If the previous test fails and the intersection is not `never`, then there is
+mere partial overlap.
 
 There is no propositional tautology that is analogous to this case, but if there is
 mere partial overlap, there is a member of source in target and a member of source
 not in target, so there is no assignability in either case.
+
+
+### Dealing with negated targets and assignability
+
+
+#### If `¬(source ∧ target)` then `source → ¬target`
+
+If there is zero overlap between source and target, then source is assignable
+to the negation of target. Zero overlap is easy to check between non-negated
+types by checking assignability of their intersection to `never`.
+
+
+#### If `(source ∧ target) ∧ (source → target)` then `¬(source → ¬target)`
+
+If there is partial overlap between source and target, and source is assignable
+to target, then source is not never and assignable so it's not in target's
+complement.
 
 
 ### Dealing with negated source and target
@@ -149,12 +201,14 @@ I'm unclear at the moment if this more of an edge or corner case.
 
 ### Dealing with the error on the side of caution on deciding subtype relationships
 
-If a common key's type on an intersection of sources is not present on any individual source,
-then there is a false negative.
+If a common key's type on an intersection of sources is not present on that key of
+any individual source, then there is a false negative.
 
-Similarly, if a common key's type on a union of targets is not present on any individual target,
-then there is a false negative.
+Similarly, if a common key's type on a union of targets is not present on that key of
+any individual target, then there is a false negative.
 
-One solution is to map keys to types many-to-one, so a different type implies a different key.
+One solution is to map keys to types many-to-one, so a different type implies a
+different key.
 
-As it stands I don't see why that is a disadvantage, given an easy way to match a key to a type.
+As it stands I don't see why that is a disadvantage, given an easy way to match a key
+to a type.
