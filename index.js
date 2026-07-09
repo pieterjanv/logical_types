@@ -14,7 +14,12 @@ const monaco = await loader.init();
 
 // Create script to load in the editor
 const content = `/*
- * A demo of logical types in TypeScript.
+ * A demo of logical types in TypeScript. Check a type against a logical type,
+ * i.e. some combination of complements, intersections and unions of types.
+ *
+ * A current limitation is that casts of types to a type suitable for comparison are
+ * never parsed to a logical type, because this is unreliable. One consequence is
+ * that TypeScript may raise misleading errors when passing a cast value to \`assign\`.
  * Find the code, including a small set of tests, at https://github.com/pieterjanv/logical_types.
  */
 

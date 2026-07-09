@@ -1,12 +1,10 @@
-declare const andS: unique symbol;
-declare const orS: unique symbol;
-declare const notS: unique symbol;
-declare const arrayS: unique symbol;
+export declare const andS: unique symbol;
+export declare const orS: unique symbol;
+export declare const notS: unique symbol;
 export type LogicalType =
 	| { [andS]: readonly unknown[] }
 	| { [orS]: readonly unknown[] }
 	| { [notS]: unknown }
-	| { [arrayS]: LogicalType };
 
 export type And<T extends readonly unknown[]> = { [andS]: T };
 export type Or<T extends readonly unknown[]> = { [orS]: T };
@@ -176,7 +174,7 @@ type In3<Source, Target> = (
 			) ? Source
 			: never
 		)
-		: never
+		: FullyReducedIn<Source, Target>
 	)
 	: FullyReducedIn<Source, Target>
 );
@@ -185,5 +183,5 @@ type FullyReducedIn<Source, Target> = (
 	Target extends string | number | boolean | bigint | symbol | null | undefined | void ? (
 		Source extends Target ? Source : never
 	)
-	: Source & Target
+	: Omit<Source, typeof notS> & Target
 );

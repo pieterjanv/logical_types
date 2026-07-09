@@ -1,4 +1,4 @@
-import type { In, Comparable } from "./types/logic.ts";
+import type { In, Comparable, Not, notS } from "./types/logic.ts";
 export * from "./types/logic.ts";
 
 /**
@@ -6,4 +6,4 @@ export * from "./types/logic.ts";
  * @example const ok = assign<And<[Not<number>, Not<boolean>]>>()("test");
  * @example const notOk = assign<And<[Not<number>, Not<string>]>>()("test"); // "Argument of type 'string' is not assignable to parameter of type 'Not<number> & Not<string>'."
  */
-export const assign: <T>() => <U>(x: In<U, T>) => Comparable<T> = () => (x: any) => x;
+export const assign: <T>() => <U>(x: In<U, T>) => U & Comparable<T> = () => (x: any) => x;
