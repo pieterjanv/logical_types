@@ -1,4 +1,4 @@
-import type { And, In, Not, Or } from "../src/types.ts";
+import type { And, In, Not, Or } from "../src/types/logic.ts";
 
 declare const example_1_2__T_implies_U: <T>(
 	x: In<T, Or<[Not<{ a: true }>, { b: true }]>>,
@@ -8,7 +8,7 @@ example_1_2__T_implies_U({ a: true, b: true } as const);
 example_1_2__T_implies_U({ a: true, b: false } as const);
 example_1_2__T_implies_U({ a: false, b: true } as const);
 example_1_2__T_implies_U({ a: false, b: false } as const);
-m
+
 declare const example_1_2__T_negimplies_U: <T>(
 	x: In<T, Not<Or<[Not<{ a: true }>, { b: true }]>>>,
 ) => T;
@@ -137,3 +137,14 @@ example_2_7__logical_types_on_keys({ a: false, b: false, c: false } as const);
 example_2_7__logical_types_on_keys({ a: true, b: true, c: false } as const);
 // @ts-expect-error
 example_2_7__logical_types_on_keys({ a: true, b: true, c: { d: true } } as const);
+
+declare const example_2_8__tuples_1: <T>(
+	x: In<T, [Not<true>, true, Not<true>]>,
+) => T;
+example_2_8__tuples_1([false, true, false] as const);
+// @ts-expect-error
+example_2_8__tuples_1([false, false, false] as const);
+// @ts-expect-error
+example_2_8__tuples_1([true, true, false] as const);
+// @ts-expect-error
+example_2_8__tuples_1([false, true, true] as const);

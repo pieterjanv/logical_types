@@ -2,5 +2,13 @@
   "name": "logical_types",
   "version": "1.0.0-alpha.1",
   "type": "module",
-  "main": "src/main.ts"
+  "main": "src/main.ts",
+  "scripts": {
+    "update-source": "mkdir -p src/types && cp $DEV/node/packages/ts.ui-core/src/ts.ui/public/logic.ts src/logic.ts && cp $DEV/node/packages/ts.ui-core/src/ts.ui/public/types/logic.ts src/types/logic.ts",
+    "postinstall": "rm -rf node_modules/state-local/lib/cjs node_modules/state-local/lib/umd node_modules/@monaco-editor/loader/lib/cjs node_modules/@monaco-editor/loader/lib/es node_modules/monaco-editor/dev node_modules/monaco-editor/esm"
+  },
+  "devDependencies": {
+    "@monaco-editor/loader": "^1.7.0",
+    "monaco-editor": "^0.55.1"
+  }
 }

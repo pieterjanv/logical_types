@@ -13,7 +13,7 @@
     // "types": [],
     // For nodejs:
     "lib": ["esnext"],
-    "types": ["node"],
+    "types": [],
     // and npm install -D @types/node
 
     "allowImportingTsExtensions": false,
@@ -46,7 +46,14 @@
     "outDir": "./dist"
   },
   "files": [
-    "src/main.ts",
+    "src/logic.ts",
     "tests/main.ts"
+  ],
+  "include": [
+    "node_modules/@monaco-editor",
+    "node_modules/monaco-editor/esm/vs/editor/editor.api.d.ts",
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }
