@@ -183,5 +183,5 @@ type FullyReducedIn<Source, Target> = (
 	Target extends string | number | boolean | bigint | symbol | null | undefined | void ? (
 		Source extends Target ? Source : never
 	)
-	: Omit<Source, typeof notS> & Target
+	: Source & Target
 );
